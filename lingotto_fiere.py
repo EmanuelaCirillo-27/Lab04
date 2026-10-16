@@ -61,8 +61,7 @@ class LingottoFiere:
         except FileNotFoundError:
             return None
 
-
-
+# Prova
 
     def assegna_stand_a_espositore(self, codice_stand, codice_espositore):
         """Associa uno stand a un espositore"""
