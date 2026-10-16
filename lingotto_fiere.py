@@ -1,3 +1,4 @@
+from operator import attrgetter
 from espositore import Espositore
 from stand import Stand
 from stand_prese_extra import StandPreseExtra
@@ -10,8 +11,8 @@ class LingottoFiere:
         """Inizializza gli attributi e le strutture dati"""
         self.__nome = nome
 
-        self.stand=[]
-        self.espositore=[]
+        self.stands=[]
+        self.espositori=[]
 
     """Aggiungere setter e getter se necessari"""
     @property
@@ -37,40 +38,79 @@ class LingottoFiere:
                         superficie=row[1]
                         padiglione=row[2]
                         prezzo=int(row[3])
-                        if row[4]!="":
+                        if len(row)>4:
                             if row[4].isdigit():
                                 prese_extra=int(row[4])
                                 stand_extra=StandPreseExtra(codice,superficie,padiglione,prezzo,prese_extra)
-                                self.stand.append(stand_extra)
+                                self.stands.append(stand_extra)
 
-                            if row[4].isalpha():
+                            elif row[4].isalpha():
                                 posizione=row[4]
                                 stand_premium = StandPremium(codice, superficie, padiglione, prezzo, posizione)
-                                self.stand.append(stand_premium)
+                                self.stands.append(stand_premium)
 
-                        stand_standard=Stand(codice, superficie, padiglione, prezzo)
-                        self.stand.append(stand_standard)
+                        else:
+                            stand_standard=Stand(codice, superficie, padiglione, prezzo)
+                            self.stands.append(stand_standard)
 
                     if codice[0:2]=='ES':
                         nome=row[1]
                         cognome=row[2]
 
                         espositore=Espositore(codice,nome,cognome)
-                        self.espositore.append(espositore)
+                        self.espositori.append(espositore)
 
         except FileNotFoundError:
             return None
 
-# Prova
 
     def assegna_stand_a_espositore(self, codice_stand, codice_espositore):
         """Associa uno stand a un espositore"""
-        # TODO
+        stand_trovato=None
+        espositore_trovato=None
+
+        for stand in self.stands:
+            if codice_stand==stand.codice:
+                stand_trovato=stand
+
+        if stand_trovato is None:
+            raise Exception(f'Stand {codice_stand} non trovato')
+
+        for espositore in self.espositori:
+            if codice_espositore==espositore.codice:
+                espositore_trovato=espositore
+
+        if espositore_trovato is None:
+            raise Exception(f'Espositore {codice_espositore} non trovato')
+
+        if not stand_trovato.disponibile:
+            raise Exception(f'Stand {codice_stand} non disponibile')
+
+        for s in self.stands:
+            if s is not None and s.espositore==espositore_trovato:
+                raise Exception(f'Espositore {codice_espositore} già assegnato allo stand {s.codice}')
+
+        stand_trovato.disponibile=False
+        stand_trovato.espositore=espositore_trovato
+
 
     def elenca_espositori(self):
         """Stampa l'elenco degli espositori mostrando, per ognuno, lo stand a cui è associato, quando applicabile """
-        # TODO
+
+        for e in self.espositori:
+            associato=None
+            for s in self.stands:
+                if s.espositore==e:
+                    associato=s
+
+            if associato != None:
+                print(f'Espositore {e}, stand associato {associato.codice}')
+            else:
+                print(f'Espositore {e}')
+
+
+
 
     def stand_ordinati_per_prezzo(self):
         """Restituisce la lista ordinata degli stand in base al prezzo"""
-        # TODO
+        return sorted(self.stands, key=attrgetter('prezzo'))
