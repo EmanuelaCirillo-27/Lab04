@@ -6,7 +6,7 @@ class StandPreseExtra(Stand):
         self.prese_extra = prese_extra
         self.calcolo_prezzo()
 
-    def calcolo_prezzo(self):
+    def calcolo_prezzo(self): # Funzione definita per calcolare il reale prezzo dello stand con extra prese, diverso dal prezzo iniziale
         prezzo_finale=self.prezzo*(1+0.07*self.prese_extra)
         self.prezzo=prezzo_finale
 

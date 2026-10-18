@@ -6,7 +6,7 @@ class StandPremium(Stand):
         self.posizione = posizione
         self.calcolo_prezzo()
 
-    def calcolo_prezzo(self):
+    def calcolo_prezzo(self): # Funzione definita per calcolare il reale prezzo dello stand Premium, diverso dal prezzo iniziale
         prezzo_finale=self.prezzo*1.30
         self.prezzo=prezzo_finale
 

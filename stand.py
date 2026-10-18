@@ -8,4 +8,4 @@ class Stand:
         self.espositore=None
 
     def __str__(self):
-        return f'{self.codice} - {self.superficie}mq - Padiglione: {self.padiglione} - Prezzo: {self.prezzo}$ - Disponibilità: {self.disponibile}'
+        return f'{self.codice} - {self.superficie}mq - Padiglione: {self.padiglione} - Prezzo: {self.prezzo}£ - Disponibilità: {self.disponibile}'
